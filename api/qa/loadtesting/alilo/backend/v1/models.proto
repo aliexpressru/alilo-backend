@@ -1,0 +1,513 @@
+syntax = "proto3";
+package qa.loadtesting.alilo.backend.v1;
+
+option go_package = "github.com/aliexpressru/alilo-backend/pkg/pb/qa/loadtesting/alilo/backend/v1";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+/*
+    Description of structures alilo_backend API
+*/
+
+message ErrorResponse {
+  google.protobuf.Empty data = 1;
+  Error error = 2;
+}
+
+message Error {
+  int64 code = 1;
+  string message = 2;
+  google.protobuf.Struct details = 3;
+}
+
+message Project {
+  int32 id = 1;
+  string title = 2;
+  string descrip = 3;
+}
+
+message Scenario {
+  int32 scenario_id = 1;
+  int32 project_id = 2;
+  string title = 3;
+  string descrip = 4;
+  string last_run_status = 5;
+
+  repeated Selector selectors = 6;
+  message Selector {
+    string name = 1;
+    string source = 2;
+    string expr = 3;
+    string cmt = 4;
+  }
+}
+
+message Script {
+  string name = 1;
+  string descrip = 2;
+  int32 script_id = 3;
+  int32 project_id = 4;
+  int32 scenario_id = 5;
+  string script_file = 7;
+  string ammo_id = 8;
+  Options options = 9;
+  string base_url = 11;
+  bool enabled = 12;
+  repeated string grafana_url = 13;
+  string tag = 14;
+  Selectors selectors = 15;
+  map<string, string> additional_env = 16;
+  string title = 17;
+//  ToolType tool_type = 15;
+//  enum ToolType {
+//    K6 = 0;
+//    GHZ = 1;
+//  }
+}
+
+message Selectors {
+  string expr_rps = 1;
+  string source_rps = 2;
+  string cmt_rps = 3;
+
+  string expr_rt = 4;
+  string source_rt = 5;
+  string cmt_rt = 6;
+
+  string expr_err = 7;
+  string source_err = 8;
+  string cmt_err = 9;
+}
+
+message SimpleScript {
+  string name = 1;
+  string description = 2;
+  int32 script_id = 3;
+  int32 project_id = 4;
+  int32 scenario_id = 5;
+  bool enabled = 6;
+  repeated string monitoring_links = 7;
+  string tag = 8;
+
+  // путь вызова обработчика
+  string path = 9;
+  // Схема для вызова(http\https\)
+  string scheme = 10;
+  string http_method = 11;
+  // Параметры запроса
+  repeated QueryParams query_params = 12;
+  map<string, string> headers = 13;
+  // указывается статичное тело запроса
+  string static_ammo = 14;
+  // URL к файлу патронов в формате массив json
+  string ammo_url = 15;
+  // if true, then use static_ammo, if false, then use ammo_url
+  bool is_static_ammo = 16;
+
+  string rps = 17;
+  string duration = 18;
+  string steps = 19;
+  string max_v_us = 20;
+  // URL к файлу со скриптом
+  string script_file_url = 21;
+  Selectors selectors = 22;
+  map<string, string> additional_env = 23;
+  string title = 24;
+}
+
+message QueryParams {
+  string key = 1;
+  string value = 2;
+}
+
+message AmmoFile {
+  int32 ammo_id = 1;
+  string name = 2;
+  string descrip = 3;
+  string s3_url = 4;
+  bytes ammo_file = 5;
+  string bucket_name = 6;
+  int64 size = 8;
+  string content_type = 9;
+}
+
+  message Options {// fixme: будут изменяться.
+  string rps = 2;
+  string steps = 3;
+  string duration = 4;
+}
+
+message Run {
+  int32 run_id = 1;
+  string title = 2;
+  int32 project_id = 5;
+  int32 scenario_id = 6;
+  repeated ScriptRun script_runs = 13;
+  Status status = 8;
+  enum Status {
+    STATUS_STOPPED_UNSPECIFIED = 0;
+    STATUS_PREPARED = 1;
+    STATUS_RUNNING = 2;
+    reserved 3;
+    STATUS_STOPPING = 4;
+  }
+  string info = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
+  // Текущий процент нагрузки от целевого
+  int32 percentage_of_target = 12;
+  string user_name = 14;
+  string preferred_user_name = 15;
+  string report_link = 16;
+}
+
+message ScriptRun {
+  int32 run_id = 1;
+  int32 run_script_id = 2;
+  Script script = 4;
+  Status status = 5;
+  enum Status {
+    STATUS_STOPPED_UNSPECIFIED = 0;
+    STATUS_RUNNING = 2;
+    STATUS_FAILED = 3;
+    STATUS_STOPPING = 4;
+  }
+  Agent agent = 6;
+  string info = 9;
+  int64 pid = 10;
+  string log_file_name = 11;
+  string k6_api_port = 12;
+  string port_prometheus = 13;
+//  Целевой RPS у текущего скрипта
+  int32 target = 14;
+  Metrics metrics = 15;
+  SimpleScript simple_script = 16;
+  TypeScriptRun type_script_run = 17;
+  enum  TypeScriptRun {
+    TYPE_SCRIPT_RUN_EXTENDED_UNSPECIFIED = 0;
+    TYPE_SCRIPT_RUN_SIMPLE = 1;
+  }
+}
+
+message Metrics {
+  string rps = 1;
+  string rt90p = 2;
+  string rt95p = 3;
+  string rt_max = 4;
+  string rt99p = 5;
+  int64 failed = 6;
+  string vus = 7;
+  string sent = 8;
+  string received = 9;
+  int32  variety_ts = 10;
+  int64  checks = 11;
+  string progress_bar = 12;
+
+  google.protobuf.Duration current_test_run_duration = 13;
+  string execution_status = 14;
+  uint64 full_iteration_count = 15;
+  string active_vus_count = 16;
+  bool has_started = 17;
+  bool has_ended = 18;
+  string failed_rate = 19;
+  string dropped_iterations = 20;
+}
+
+message Agent {
+  int32 agent_id = 1;
+  string host_name = 2;
+  string port = 3;
+  bool enabled = 4;
+  repeated string tags = 5;
+  int32 cpu_used = 6;
+  int32 mem_used = 7;
+  int32 ports_used = 8;
+}
+
+message Command {
+  int32 command_id = 1;
+  Type type = 2;
+  Scope scope = 3;
+  optional int32 run_id = 4;
+  // не используемое поле
+  optional int32 agent_id = 5;
+  repeated int64 script_ids = 6;
+  Status status = 7;
+  string error_description = 8;
+  string hostname = 9;
+  google.protobuf.Timestamp  created_at = 10;
+  google.protobuf.Timestamp  updated_at = 11;
+  int32 percentage_of_target = 12;
+  int32 increase_rps = 13;
+
+  enum Status {
+    STATUS_CREATED_UNSPECIFIED = 0;
+    STATUS_PROCESSED = 1;
+    STATUS_FAILED = 2;
+    STATUS_COMPLETED = 3;
+  }
+}
+
+enum Type {
+  TYPE_RUN_SCENARIO_UNSPECIFIED = 0;
+  TYPE_STOP_SCENARIO = 1;
+  TYPE_RUN_SCRIPT = 2;
+  TYPE_STOP_SCRIPT = 3;
+  TYPE_UPDATE = 4;
+  TYPE_ADJUSTMENT = 5;
+  TYPE_RUN_SIMPLE_SCRIPT =8;
+}
+
+enum Scope {
+  SCOPE_ALL_UNSPECIFIED = 0;
+  SCOPE_ID = 1;
+}
+
+message Endpoint {
+  repeated string targets = 1;
+  Labels labels = 2;
+}
+
+message Labels {
+  string run_id = 1;
+  string scenario_title = 2;
+  string run_url = 3;
+  string script_title = 4;
+  string script_type = 5;
+  string script_run_id = 6;
+  string ran_by_user = 7;
+}
+
+message StatisticsMetric {
+  google.protobuf.Timestamp from = 1;
+  int32  statistic_id = 2;
+  int32  statistic_dump_id = 3;
+  string url_path = 4;
+  string url_method = 5;
+  repeated int64  project_ids = 6;
+  repeated int64  scenario_ids = 7;
+  repeated int64  run_ids = 8;
+  repeated int64  script_run_ids = 9;
+  repeated int64  script_ids = 10;
+  repeated string trace_ids = 11;
+  repeated string agents = 12;
+  int32  rps = 13;
+  int32  rt_90_p = 14;
+  int32  rt_95_p = 15;
+  int32  rt_99_p = 16;
+  int32  rt_max = 17;
+  int32  vus = 18;
+  int32  failed = 19;
+  int32  data_sent = 20;
+  int32  data_received = 21;
+  string current_test_run_duration = 22;
+}
+
+
+message Trace {
+  string trace_id = 1;
+  google.protobuf.Timestamp trace_time = 2;
+  int32 project_id = 3;
+  int32 scenario_id = 4;
+  int32 script_id = 5;
+  int32 run_id = 6;
+  int32 run_script_id = 7;
+  string agent = 8;
+  repeated string url_paths = 9;
+}
+
+message DataRange {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+}
+
+message EndpointReport {
+  string url = 1;
+  string message = 2;
+  ReportWithTraceRouts report = 3;
+}
+
+message ReportWithTraceRouts {
+  string url = 1;
+  string message = 2;
+  StatusLoad status_load = 3;
+  bool status_public = 4;
+  StatsWithTraceRouts stats = 5;
+}
+
+enum StatusLoad {
+  //NONE
+  STATUS_LOAD_UNSPECIFIED = 0;
+  STATUS_LOAD_DIRECT = 1;
+  STATUS_LOAD_INDIRECT = 2;
+}
+
+message StatsWithTraceRouts {
+  repeated int32  statistic_id = 1;
+  repeated int32  statistic_dump_id = 2;
+  repeated ScenarioData  scenarios = 3;
+  repeated int64  run_ids = 4;
+  repeated int64  script_run_ids = 5;
+  repeated int64  script_ids = 6;
+  repeated TraceWithRouts traces = 7;
+
+  int32  rps = 13;
+  int32  rt_90_p = 14;
+  int32  rt_95_p = 15;
+  int32  rt_99_p = 16;
+  int32  rt_max = 17;
+  int32  failed = 19;
+  int32  data_sent = 20;
+  int32  data_received = 21;
+}
+
+message ScenarioData {
+  string  project_name = 1;
+  string  scenario_name = 2;
+  int32  project_id = 3;
+  int64  scenario_id = 4;
+}
+
+message TraceWithRouts {
+  string trace_id = 1;
+  Status status = 2;
+  repeated Service services = 3;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+    STATUS_PROCESSING = 2;
+    STATUS_NOT_FOUND = 3;
+  }
+}
+
+message Service {
+  string name = 1;
+  repeated string handlers = 2;
+}
+
+message InternalServiceNode {
+  string namespace = 1;
+  string service_name = 2;
+  string handler_name = 3;
+  HandlerType handler_type = 4;
+  bool status = 5;
+  int64 count_handlers = 6;
+  int64 coverage_handlers = 7;
+  repeated InternalServiceNode children = 8;
+  repeated string trace_ids = 9;
+}
+
+enum HandlerType {
+  HANDLER_TYPE_UNSPECIFIED = 0;
+  HANDLER_TYPE_HTTP = 1;
+  HANDLER_TYPE_GRPC = 2;
+}
+
+message GroupsPage {
+  repeated .qa.loadtesting.alilo.backend.v1.Group groups = 1;
+  string user_name = 2;
+  string preferred_user_name = 3;
+}
+
+message Group {
+  int32 group_id = 1;
+  int32 index = 2;
+  string title = 3;
+  int32 delay = 4;
+  string duration = 5;
+  string steps = 6;
+  bool restart = 7;
+  repeated ScenarioGroup scenarios_group = 8;
+}
+
+message ScenarioGroup {
+  int32 scenarios_group_id = 1;
+  int32 group_id = 2;
+  int32 index = 3;
+  string title_scenario = 4;
+  int32 project_id = 5;
+  int32 scenario_id = 6;
+  int32 percentage = 7;
+  int32 percentage_target = 8;
+  int32 percentage_max = 9;
+  repeated string duty = 10;
+}
+
+message GroupScenarioStatus {
+  Run.Status run_status = 1;
+  int32 run_id = 2;
+  int32 percent_current = 3;
+  int64 count_interrupted = 4;
+  int64 count_ended = 5;
+  int64 count_failed = 6;
+}
+
+message GroupLog {
+  int32 log_id = 1;
+  string user_name = 2;
+  string preferred_user_name = 3;
+  string logs = 4;
+}
+
+message ByExprData {
+  string result_type = 1;
+  repeated ByExprRes result = 2;
+}
+
+message ByExprRes {
+  map<string, string> metric = 1;
+  repeated ByExprValues values = 2;
+}
+
+message ByExprValues {
+  int64 timestamp = 1;
+  int64 data = 2;
+}
+
+message ByExprMetric {
+  string name = 1;
+  string job = 2;
+  string instance = 3;
+}
+
+message ByExprStats {
+  string series_fetched = 1;
+  int64 execution_time_msec = 2;
+}
+
+message StorageObject {
+  string key = 1;
+  string last_modified = 2;
+  string etag = 3;
+  int64 size = 4;
+  string storage_class = 5;
+  Owner owner = 6;
+  string type = 7;
+}
+
+message Owner {
+  string id = 1;
+  string display_name = 2;
+}
+
+message ObjectNode {
+  string name = 1;
+  StorageObject storage_object = 2;
+  ObjectType type = 3;
+  repeated ObjectNode children = 4;
+  int32 level = 5;
+  string bucket_name = 6;
+  string path = 7;
+}
+
+enum ObjectType {
+  ROOT = 0;
+  DIR = 1;
+  FILE = 2;
+  EMPTY = 3;
+}

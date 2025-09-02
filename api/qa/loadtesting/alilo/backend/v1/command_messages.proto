@@ -1,0 +1,28 @@
+syntax = "proto3";
+package qa.loadtesting.alilo.backend.v1;
+
+option go_package = "github.com/aliexpressru/alilo-backend/pkg/pb/qa/loadtesting/alilo/backend/v1";
+
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+import "qa/loadtesting/alilo/backend/v1/models.proto";
+
+
+message CommandNewRequest {
+  .qa.loadtesting.alilo.backend.v1.Type command_type = 1;
+  .qa.loadtesting.alilo.backend.v1.Scope scope = 2;
+  int32 run_id = 3;
+  repeated int64 script_ids = 4;
+  optional int32 percentage_of_target = 5;
+  optional int32 increase_rps = 6;
+}
+
+message CommandNewResponse {
+  bool status = 1;
+  string message = 2;
+  .qa.loadtesting.alilo.backend.v1.Command command = 3;
+}

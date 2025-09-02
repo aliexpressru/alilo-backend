@@ -1,0 +1,166 @@
+syntax = "proto3";
+package qa.loadtesting.alilo.backend.v1;
+
+option go_package = "github.com/aliexpressru/alilo-backend/pkg/pb/qa/loadtesting/alilo/backend/v1";
+
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+import "qa/loadtesting/alilo/backend/v1/models.proto";
+import "qa/loadtesting/alilo/backend/v1/agent_messages.proto";
+
+
+// hint: check out SOA convention before start designing your API
+// https://coda.io/d/Conventions-and-standards_dHjhfs7hfaz
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  // hint: check out more grpc-gateway swagger examples:
+  // https://github.com/grpc-ecosystem/grpc-gateway/blob/master/examples/internal/proto/examplepb/a_bit_of_everything.proto
+  info: {
+    title: "alilo-backend api";
+    description: "Aliexpress Load Test System Backend";
+    version: "1.0";
+  };
+  consumes: "application/json";
+  produces: "application/json";
+  // hint: add more codes if you need
+  responses: {
+    key: "400";
+    value: {
+      description: "Bad Request";
+      schema: {
+        json_schema: {
+          ref: ".qa.loadtesting.alilo.backend.v1.ErrorResponse";
+        }
+      }
+    }
+  }
+  responses: {
+    key: "401";
+    value: {
+      description: "Unauthorized";
+      schema: {
+        json_schema: {
+          ref: ".qa.loadtesting.alilo.backend.v1.ErrorResponse";
+        }
+      }
+    }
+  }
+  responses: {
+    key: "403";
+    value: {
+      description: "Forbidden";
+      schema: {
+        json_schema: {
+          ref: ".qa.loadtesting.alilo.backend.v1.ErrorResponse";
+        }
+      }
+    }
+  }
+  responses: {
+    key: "404";
+    value: {
+      description: "Not Found";
+      schema: {
+        json_schema: {
+          ref: ".qa.loadtesting.alilo.backend.v1.ErrorResponse";
+        }
+      }
+    }
+  }
+  responses: {
+    key: "500";
+    value: {
+      description: "Internal Server Error";
+      schema: {
+        json_schema: {
+          ref: ".qa.loadtesting.alilo.backend.v1.ErrorResponse";
+        }
+      }
+    }
+  }
+  responses: {
+    key: "default";
+    value: {
+      description: "Unexpected Error";
+      schema: {
+        json_schema: {
+          ref: ".qa.loadtesting.alilo.backend.v1.ErrorResponse";
+        }
+      }
+    }
+  }
+};
+
+
+// hint: checkout protobuf style guide https://developers.google.com/protocol-buffers/docs/style
+service AgentService {
+
+  // GetAllAgents - Retrieve list of all agents
+  rpc GetAllAgents(.qa.loadtesting.alilo.backend.v1.GetAllAgentsRequest) returns (.qa.loadtesting.alilo.backend.v1.GetAllAgentsResponse) {
+    option (google.api.http) = {
+      post: "/v1/agents"
+      body: "*"
+    };
+  }
+
+  // GetAgent - Retrieve agent by ID
+  rpc GetAgent(.qa.loadtesting.alilo.backend.v1.GetAgentRequest) returns (.qa.loadtesting.alilo.backend.v1.GetAgentResponse) {
+    option (google.api.http) = {
+      post: "/v1/agent"
+      body: "*"
+    };
+  }
+
+  // SetAgent - Create new agent
+  rpc SetAgent(.qa.loadtesting.alilo.backend.v1.SetAgentRequest) returns (.qa.loadtesting.alilo.backend.v1.SetAgentResponse) {
+    option (google.api.http) = {
+      post: "/v1/agent/set"
+      body: "*"
+    };
+  }
+
+  // UpdateAgent - Update agent parameters
+  rpc UpdateAgent(.qa.loadtesting.alilo.backend.v1.UpdateAgentRequest) returns (.qa.loadtesting.alilo.backend.v1.UpdateAgentResponse) {
+    option (google.api.http) = {
+      post: "/v1/agent/update"
+      body: "*"
+    };
+  }
+
+  // DeleteAgent - Delete agent
+  rpc DeleteAgent(.qa.loadtesting.alilo.backend.v1.DeleteAgentRequest) returns (.qa.loadtesting.alilo.backend.v1.DeleteAgentResponse) {
+    option (google.api.http) = {
+      post: "/v1/agent/delete"
+      body: "*"
+    };
+  }
+
+  // GetAllTags - Retrieve list of existing tags
+  rpc GetAllTags(.qa.loadtesting.alilo.backend.v1.GetAllTagsRequest) returns (.qa.loadtesting.alilo.backend.v1.GetAllTagsResponse) {
+    option (google.api.http) = {
+      post: "/v1/agent/tags"
+      body: "*"
+    };
+  }
+
+  // GetAllAgentsByTag - Retrieve list of agents matching specified tag
+  rpc GetAllAgentsByTag(.qa.loadtesting.alilo.backend.v1.GetAllAgentsByTagRequest) returns (.qa.loadtesting.alilo.backend.v1.GetAllAgentsByTagResponse) {
+    option (google.api.http) = {
+      post: "/v1/agents/by-tag"
+      body: "*"
+    };
+  }
+
+  // RemoveLogs - Remove logs
+  rpc RemoveLogs(.qa.loadtesting.alilo.backend.v1.RemoveLogsRequest) returns (.qa.loadtesting.alilo.backend.v1.RemoveLogsResponse) {
+    option (google.api.http) = {
+      post: "/v1/remove-logs"
+      body: "*"
+    };
+  }
+}
+

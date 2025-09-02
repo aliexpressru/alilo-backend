@@ -1,0 +1,145 @@
+syntax = "proto3";
+package qa.loadtesting.alilo.backend.v1;
+
+option go_package = "github.com/aliexpressru/alilo-backend/pkg/pb/qa/loadtesting/alilo/backend/v1";
+
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+import "qa/loadtesting/alilo/backend/v1/models.proto";
+
+
+message GetAllScenariosRequest {
+  int32 project_id = 1;
+  optional int32 limit = 3;
+  optional int32 page_number = 4;
+}
+
+message GetAllScenariosResponse {
+  bool status = 1;
+  repeated .qa.loadtesting.alilo.backend.v1.Scenario scenarios = 2;
+  string message = 3;
+  optional int64 total_pages = 4;
+}
+
+message CreateScenarioRequest {
+  .qa.loadtesting.alilo.backend.v1.Scenario scenario = 1;
+}
+
+message CreateScenarioResponse {
+  bool status = 1;
+  int32 scenario_id = 2;
+  string message = 3;
+}
+
+message GetScenarioRequest {
+  int32 scenario_id = 2;
+}
+
+message GetScenarioResponse {
+  bool status = 1;
+  .qa.loadtesting.alilo.backend.v1.Scenario scenario = 2;
+  string message = 3;
+}
+
+message UpdateScenarioRequest {
+  .qa.loadtesting.alilo.backend.v1.Scenario scenario = 2;
+}
+
+message UpdateScenarioResponse {
+  bool status = 1;
+  string message = 2;
+}
+
+message DeleteScenarioRequest {
+  int32 scenario_id = 1;
+}
+
+message DeleteScenarioResponse {
+  bool status = 1;
+  string message = 2;
+}
+
+message SetDurationScenarioRequest {
+  optional int32 project_id = 1;
+  optional int32 scenario_id = 2;
+  string duration = 3;
+}
+
+message SetDurationScenarioResponse {
+  bool status = 1;
+  string message = 2;
+}
+
+message SetStepsScenarioRequest {
+  optional int32 project_id = 1;
+  optional int32 scenario_id = 2;
+  string steps = 3;
+}
+
+message SetStepsScenarioResponse {
+  bool status = 1;
+  string message = 2;
+}
+
+message GetScenarioLastRunStatusRequest {
+  int32 scenario_id = 1;
+}
+
+message GetScenarioLastRunStatusResponse {
+  bool status = 1;
+  string message = 2;
+  string last_run_status = 3;
+  int32 last_run_id = 4;
+}
+
+message CopyScenarioRequest {
+  int32 source_scenario_id = 1;
+  //На вход приходит либо id уже существующего сценария, для копирования скриптов с другой сценарий
+  // либо заполнить данные для создания нового Scenario(project_id, title, descrip)
+  oneof target {
+    int32 target_scenario_id = 2;
+    .qa.loadtesting.alilo.backend.v1.Scenario target_scenario_data = 3;
+  }
+}
+
+message CopyScenarioResponse {
+  bool status = 1;
+  string message = 2;
+  int32 scenario_id = 3;
+}
+
+message AmountRPSRequest {
+  int32 scenario_id = 1;
+}
+
+message AmountRPSResponse {
+  bool status = 1;
+  int64 rps = 3;
+}
+
+message SetTegScenarioRequest {
+  int32 scenario_id = 1;
+  string tag = 2;
+}
+
+message SetTegScenarioResponse {
+  bool status = 1;
+}
+
+message GetGrafanaStructureRequest {
+  int32 scenario_id = 1;
+}
+
+message GetGrafanaStructureByIdsRequest {
+  string title = 1;
+  repeated int32 scenario_ids = 2;
+}
+
+message GetGrafanaStructureResponse {
+  bool status = 1;
+  string message = 2;
+}

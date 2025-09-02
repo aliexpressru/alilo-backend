@@ -1,0 +1,191 @@
+syntax = "proto3";
+package qa.loadtesting.alilo.backend.v1;
+
+option go_package = "github.com/aliexpressru/alilo-backend/pkg/pb/qa/loadtesting/alilo/backend/v1";
+
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+import "qa/loadtesting/alilo/backend/v1/models.proto";
+
+message GetAllRunningRequest {
+  optional int32 project_id = 1;
+  optional int32 scenario_id = 2;
+  optional int32 limit = 3;
+  optional int32 page_number = 4;
+}
+
+message GetAllRunningResponse {
+  bool status = 1;
+  string message = 2;
+  repeated .qa.loadtesting.alilo.backend.v1.Run runs = 3;
+  optional int64 total_pages = 4;
+}
+
+message GetRunningRequest {
+  int32 run_id = 1;
+}
+
+message GetRunningResponse {
+  bool status = 1;
+  string message = 2;
+  .qa.loadtesting.alilo.backend.v1.Run run = 3;
+}
+
+message StopScriptRequest {
+  int32 run_id = 1;
+  int32 run_script_id = 2;
+}
+
+message StopScriptResponse {
+  bool status = 1;
+  string message = 2;
+  .qa.loadtesting.alilo.backend.v1.ScriptRun run = 3;
+}
+
+message RunScenarioRequest {
+  int32 scenario_id = 1;
+  // На какой процент от целевой нагрузки требуется запустить сценарий(каждый скрипт будет высчитываться отдельно),
+  // если поле не присылается, то запускается на 100%
+  optional int32 percentage_of_target = 2;
+  string user_name = 3;
+  string preferred_user_name = 4;
+}
+
+message RunScenarioResponse {
+  bool status = 1;
+  string message = 2;
+  .qa.loadtesting.alilo.backend.v1.Run run = 3;
+}
+
+message StopScenarioRequest {
+  int32 run_id = 1;
+}
+
+message StopScenarioResponse {
+  bool status = 1;
+  string message = 2;
+  .qa.loadtesting.alilo.backend.v1.Run run = 3;
+}
+
+message GetRunsByStatusRequest {
+  .qa.loadtesting.alilo.backend.v1.Run.Status run_status = 1;
+  optional int32 limit = 2;
+  optional int32 page_number = 3;
+}
+
+message GetRunsByStatusResponse {
+  bool status = 1;
+  string message = 2;
+  repeated .qa.loadtesting.alilo.backend.v1.Run runs = 3;
+  optional int64 total_pages = 4;
+}
+
+message AdjustmentScenarioRequest {
+  int32 run_id = 1;
+  // Сколько процентов должно быть запущено, handler добавляет и понижает, приводя нагрузку к требуемому проценту по каждому скрипту
+  int32 adjustment_on_percent = 3;
+}
+
+message AdjustmentScenarioResponse {
+  bool status = 1;
+  string message = 2;
+}
+
+message IncreaseScriptByRPSRequest {
+  int32 run_id = 1;
+  int32 script_id = 2;
+  int32 increase_by_rps = 3;
+}
+
+message IncreaseScriptByRPSResponse {
+  bool status = 1;
+  string message = 2;
+}
+
+message IncreaseSimpleScriptByRPSRequest {
+  int32 run_id = 1;
+  int32 simple_script_id = 2;
+  int32 increase_by_rps = 3;
+}
+
+message IncreaseSimpleScriptByRPSResponse {
+  bool status = 1;
+  string message = 2;
+}
+
+message RunScriptRequest {
+  int32 script_id = 1;
+}
+
+message RunScriptResponse {
+  bool status = 1;
+  string message = 2;
+  .qa.loadtesting.alilo.backend.v1.Run run = 3;
+}
+
+message RunSimpleScriptRequest {
+  int32 simple_script_id = 1;
+}
+
+message RunSimpleScriptResponse {
+  bool status = 1;
+  string message = 2;
+  .qa.loadtesting.alilo.backend.v1.Run run = 3;
+}
+
+message TimeRangeRequest {
+  int32 run_id = 1;
+}
+
+message TimeRangeResponse {
+  bool status = 1;
+
+  int64 from_ts = 4;
+  int64 to_ts = 5;
+
+  string from_f = 6;
+  string to_f = 7;
+}
+
+message CurrentRPSRequest {
+  int32 run_id = 1;
+}
+
+message CurrentRPSResponse {
+  bool status = 1;
+  int64 rps = 2;
+}
+
+message ScriptRunsByScriptNameRequest {
+  int32 run_id = 1;
+  string script_name = 2;
+}
+
+message ScriptRunsByScriptNameResponse {
+  repeated .qa.loadtesting.alilo.backend.v1.ScriptRun script_runs = 1;
+}
+
+message ScriptRunsByScriptRunIDRequest {
+  int32 run_id = 1;
+  int32 script_run_id = 2;
+}
+
+message ScriptRunsByScriptRunIDResponse {
+  .qa.loadtesting.alilo.backend.v1.ScriptRun script_runs = 1;
+}
+
+message IsChangeLoadLevelRequest {
+  int32 run_id = 1;
+}
+
+message IsChangeLoadLevelResponse {
+  int32 current_level = 1;
+  int32 next_level = 2;
+  bool can_change = 3;
+  .qa.loadtesting.alilo.backend.v1.Run.Status run_status = 4;
+}

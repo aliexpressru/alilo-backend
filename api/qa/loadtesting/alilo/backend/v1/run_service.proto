@@ -1,0 +1,146 @@
+syntax = "proto3";
+package qa.loadtesting.alilo.backend.v1;
+
+option go_package = "github.com/aliexpressru/alilo-backend/pkg/pb/qa/loadtesting/alilo/backend/v1";
+
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+import "qa/loadtesting/alilo/backend/v1/models.proto";
+import "qa/loadtesting/alilo/backend/v1/run_messages.proto";
+
+// RunService - сервис запуска и остановки нагрузочных тестов
+// hint: checkout protobuf style guide https://developers.google.com/protocol-buffers/docs/style
+service RunService {
+
+  // GetAllRunning - Get list of runs by project, scenario or all runs
+  rpc GetAllRunning(.qa.loadtesting.alilo.backend.v1.GetAllRunningRequest) returns (.qa.loadtesting.alilo.backend.v1.GetAllRunningResponse) {
+    option (google.api.http) = {
+      post: "/v1/runs"
+      body: "*"
+    };
+  }
+
+  // GetRunning - Get list of running scripts relative to selected "run"
+  rpc GetRunning(.qa.loadtesting.alilo.backend.v1.GetRunningRequest) returns (.qa.loadtesting.alilo.backend.v1.GetRunningResponse) {
+    option (google.api.http) = {
+      post: "/v1/run"
+      body: "*"
+    };
+  }
+
+  // StopScript - Stop specific script
+  rpc StopScript(.qa.loadtesting.alilo.backend.v1.StopScriptRequest) returns (.qa.loadtesting.alilo.backend.v1.StopScriptResponse) {
+    option (google.api.http) = {
+      post: "/v1/run/stop/script-run"
+      body: "*"
+    };
+  }
+
+  // RunScenario - Run all enabled scripts in scenario
+  rpc RunScenario(.qa.loadtesting.alilo.backend.v1.RunScenarioRequest) returns (.qa.loadtesting.alilo.backend.v1.RunScenarioResponse) {
+    option (google.api.http) = {
+      post: "/v1/run/start"
+      body: "*"
+    };
+  }
+
+  // StopScenario - Stop all running scripts from scenario
+  rpc StopScenario(.qa.loadtesting.alilo.backend.v1.StopScenarioRequest) returns (.qa.loadtesting.alilo.backend.v1.StopScenarioResponse) {
+    option (google.api.http) = {
+      post: "/v1/run/stop"
+      body: "*"
+    };
+  }
+
+  // GetRunsByStatus - Get list of runs by specified status
+  rpc GetRunsByStatus(.qa.loadtesting.alilo.backend.v1.GetRunsByStatusRequest) returns (.qa.loadtesting.alilo.backend.v1.GetRunsByStatusResponse) {
+    option (google.api.http) = {
+      post: "/v1/run/by-status"
+      body: "*"
+    };
+  }
+
+  // AdjustmentScenario - Adjust load (increase/decrease) for entire scenario by percentage
+  rpc AdjustmentScenario(.qa.loadtesting.alilo.backend.v1.AdjustmentScenarioRequest) returns (.qa.loadtesting.alilo.backend.v1.AdjustmentScenarioResponse) {
+    option (google.api.http) = {
+      post: "/v1/run/adjustment"
+      body: "*"
+    };
+  }
+
+  // IncreaseScriptByRPS - Increase load on specific script (RPS converted to percentages for execution) in running scenario
+  rpc IncreaseScriptByRPS(.qa.loadtesting.alilo.backend.v1.IncreaseScriptByRPSRequest) returns (.qa.loadtesting.alilo.backend.v1.IncreaseScriptByRPSResponse) {
+    option (google.api.http) = {
+      post: "/v1/run/increase/script"
+      body: "*"
+    };
+  }
+
+  // IncreaseSimpleScriptByRPS - Increase load on specific simple script (RPS converted to percentages for execution) in running scenario
+  rpc IncreaseSimpleScriptByRPS(.qa.loadtesting.alilo.backend.v1.IncreaseSimpleScriptByRPSRequest) returns (.qa.loadtesting.alilo.backend.v1.IncreaseSimpleScriptByRPSResponse) {
+    option (google.api.http) = {
+      post: "/v1/run/increase/simple-script"
+      body: "*"
+    };
+  }
+
+  // RunScript - Test run of specific script (starts with 2 RPS, 2 min, 1 step)
+  rpc RunScript(.qa.loadtesting.alilo.backend.v1.RunScriptRequest) returns (.qa.loadtesting.alilo.backend.v1.RunScriptResponse) {
+    option (google.api.http) = {
+      post: "/v1/run/start/script"
+      body: "*"
+    };
+  }
+
+  // RunSimpleScript - Test run of specific simple script (starts with 2 RPS, 2 min, 1 step)
+  rpc RunSimpleScript(.qa.loadtesting.alilo.backend.v1.RunSimpleScriptRequest) returns (.qa.loadtesting.alilo.backend.v1.RunSimpleScriptResponse) {
+    option (google.api.http) = {
+      post: "/v1/run/start/simple-script"
+      body: "*"
+    };
+  }
+
+  // TimeRange - Get time range of run in Grafana format for URL or time range fields
+  rpc TimeRange(.qa.loadtesting.alilo.backend.v1.TimeRangeRequest) returns (.qa.loadtesting.alilo.backend.v1.TimeRangeResponse) {
+    option (google.api.http) = {
+      post: "/v1/run/timeRange"
+      body: "*"
+    };
+  }
+
+  // CurrentRPS - Get total current RPS for active run
+  rpc CurrentRPS(.qa.loadtesting.alilo.backend.v1.CurrentRPSRequest) returns (.qa.loadtesting.alilo.backend.v1.CurrentRPSResponse) {
+    option (google.api.http) = {
+      post: "/v1/run/rps"
+      body: "*"
+    };
+  }
+
+  // ScriptRunsByScriptName - Get all script runs by specific script name (scripts with same name are grouped as one in run)
+  rpc ScriptRunsByScriptName(.qa.loadtesting.alilo.backend.v1.ScriptRunsByScriptNameRequest) returns (.qa.loadtesting.alilo.backend.v1.ScriptRunsByScriptNameResponse) {
+    option (google.api.http) = {
+      post: "/v1/run/scriptruns"
+      body: "*"
+    };
+  }
+
+  // ScriptRunsByScriptRunID - Get all script runs by specific script run ID (scripts with same name are grouped as one in run)
+  rpc ScriptRunsByScriptRunID(.qa.loadtesting.alilo.backend.v1.ScriptRunsByScriptRunIDRequest) returns (.qa.loadtesting.alilo.backend.v1.ScriptRunsByScriptRunIDResponse) {
+    option (google.api.http) = {
+      post: "/v1/run/scriptrun"
+      body: "*"
+    };
+  }
+
+  // IsChangeLoadLevel - Check if load level adjustment is possible
+  rpc IsChangeLoadLevel(.qa.loadtesting.alilo.backend.v1.IsChangeLoadLevelRequest) returns (.qa.loadtesting.alilo.backend.v1.IsChangeLoadLevelResponse) {
+    option (google.api.http) = {
+      post: "/v1/run/is-change-loadlevel"
+      body: "*"
+    };
+  }
+}

@@ -1,0 +1,59 @@
+syntax = "proto3";
+package qa.loadtesting.alilo.backend.v1;
+
+option go_package = "github.com/aliexpressru/alilo-backend/pkg/pb/qa/loadtesting/alilo/backend/v1";
+
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+import "qa/loadtesting/alilo/backend/v1/models.proto";
+
+message GetBucketLocationRequest {
+  string path = 1;
+}
+
+message GetBucketLocationResponse {
+  string location_constraint = 1;
+  S3Error error = 2;
+}
+
+message GetBucketListRequest {
+}
+
+message GetBucketListResponse {
+  ObjectNode result = 1;
+  string bucket_name = 2;
+}
+
+message UploadFileRequest {
+  string name = 1;
+  string content_type = 2;
+  bytes data = 3;
+}
+
+message UploadFileResponse {
+  string name = 1;
+  string e_tag = 2;
+  int64 size = 3;
+  string last_modified = 4;
+}
+
+message DeleteFileRequest {
+  string path = 1;
+  string bucketName = 2;
+}
+
+message DeleteFileResponse {
+  string path = 1;
+}
+
+message S3Error {
+  string code = 1;
+  string bucket_name = 2;
+  string request_id = 3;
+  string host_id = 4;
+}

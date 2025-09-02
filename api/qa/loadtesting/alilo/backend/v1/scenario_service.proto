@@ -1,0 +1,123 @@
+syntax = "proto3";
+package qa.loadtesting.alilo.backend.v1;
+
+option go_package = "github.com/aliexpressru/alilo-backend/pkg/pb/qa/loadtesting/alilo/backend/v1";
+
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+import "qa/loadtesting/alilo/backend/v1/models.proto";
+import "qa/loadtesting/alilo/backend/v1/scenario_messages.proto";
+
+// hint: checkout protobuf style guide https://developers.google.com/protocol-buffers/docs/style
+service ScenarioService {
+
+  // GetAllScenarios - Retrieve list of scenarios
+  rpc GetAllScenarios(.qa.loadtesting.alilo.backend.v1.GetAllScenariosRequest) returns (.qa.loadtesting.alilo.backend.v1.GetAllScenariosResponse) {
+    option (google.api.http) = {
+      post: "/v1/scenarios"
+      body: "*"
+    };
+  }
+
+  // GetScenario - Retrieve scenario
+  rpc GetScenario(.qa.loadtesting.alilo.backend.v1.GetScenarioRequest) returns (.qa.loadtesting.alilo.backend.v1.GetScenarioResponse) {
+    option (google.api.http) = {
+      post: "/v1/scenario"
+      body: "*"
+    };
+  }
+
+  // CreateScenario - Create new scenario
+  rpc CreateScenario(.qa.loadtesting.alilo.backend.v1.CreateScenarioRequest) returns (.qa.loadtesting.alilo.backend.v1.CreateScenarioResponse) {
+    option (google.api.http) = {
+      post: "/v1/scenario/create"
+      body: "*"
+    };
+  }
+
+  // UpdateScenario - Update scenario
+  rpc UpdateScenario(.qa.loadtesting.alilo.backend.v1.UpdateScenarioRequest) returns (.qa.loadtesting.alilo.backend.v1.UpdateScenarioResponse) {
+    option (google.api.http) = {
+      post: "/v1/scenario/update"
+      body: "*"
+    };
+  }
+
+  // DeleteScenario - Delete scenario (including all scripts)
+  rpc DeleteScenario(.qa.loadtesting.alilo.backend.v1.DeleteScenarioRequest) returns (.qa.loadtesting.alilo.backend.v1.DeleteScenarioResponse) {
+    option (google.api.http) = {
+      post: "/v1/scenario/delete"
+      body: "*"
+    };
+  }
+
+  // SetDurationScenario - Set test duration for all scripts in scenario (pass either project_id or scenario_id)
+  rpc SetDurationScenario(.qa.loadtesting.alilo.backend.v1.SetDurationScenarioRequest) returns (.qa.loadtesting.alilo.backend.v1.SetDurationScenarioResponse) {
+    option (google.api.http) = {
+      post: "/v1/scenario/duration"
+      body: "*"
+    };
+  }
+
+  // GetScenarioLastRunStatus - Get last run status of scenario
+  rpc GetScenarioLastRunStatus(.qa.loadtesting.alilo.backend.v1.GetScenarioLastRunStatusRequest) returns (.qa.loadtesting.alilo.backend.v1.GetScenarioLastRunStatusResponse) {
+    option (google.api.http) = {
+      post: "/v1/scenario/last-run-status"
+      body: "*"
+    };
+  }
+
+  // CopyScenario - Copy scenario
+  // Input: either existing scenario ID or new scenario data (project_id, title, descrip)
+  rpc CopyScenario(.qa.loadtesting.alilo.backend.v1.CopyScenarioRequest) returns (.qa.loadtesting.alilo.backend.v1.CopyScenarioResponse) {
+    option (google.api.http) = {
+      post: "/v1/scenario/copy"
+      body: "*"
+    };
+  }
+
+  // SetStepsScenario - Set number of steps for all scripts in scenario
+  rpc SetStepsScenario(.qa.loadtesting.alilo.backend.v1.SetStepsScenarioRequest) returns (.qa.loadtesting.alilo.backend.v1.SetStepsScenarioResponse) {
+    option (google.api.http) = {
+      post: "/v1/scenario/steps"
+      body: "*"
+    };
+  }
+
+  // AmountRPS - Get total current RPS for scenario
+  rpc AmountRPS(.qa.loadtesting.alilo.backend.v1.AmountRPSRequest) returns (.qa.loadtesting.alilo.backend.v1.AmountRPSResponse) {
+    option (google.api.http) = {
+      post: "/v1/scenario/rps"
+      body: "*"
+    };
+  }
+
+  // SetTagScenario - Set common tag for all scripts in scenario
+  rpc SetTegScenario(.qa.loadtesting.alilo.backend.v1.SetTegScenarioRequest) returns (.qa.loadtesting.alilo.backend.v1.SetTegScenarioResponse) {
+    option (google.api.http) = {
+      post: "/v1/scenario/teg"
+      body: "*"
+    };
+  }
+
+  // GetGrafanaStructure - Generate dashboard structure for Grafana
+  rpc GetGrafanaStructure(.qa.loadtesting.alilo.backend.v1.GetGrafanaStructureRequest) returns (.qa.loadtesting.alilo.backend.v1.GetGrafanaStructureResponse) {
+    option (google.api.http) = {
+      post: "/v1/scenario/grafanaStructure"
+      body: "*"
+    };
+  }
+
+  // GetGrafanaStructureByIds - Generate dashboard structure for Grafana by IDs
+  rpc GetGrafanaStructureByIds(.qa.loadtesting.alilo.backend.v1.GetGrafanaStructureByIdsRequest) returns (.qa.loadtesting.alilo.backend.v1.GetGrafanaStructureResponse) {
+    option (google.api.http) = {
+      post: "/v1/scenario/grafanaStructureByIds"
+      body: "*"
+    };
+  }
+}
+

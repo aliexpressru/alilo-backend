@@ -1,0 +1,8 @@
+site_name: "qa.loadtesting.alilo.backend"
+site_description: "LoadTesting backend system"
+
+nav:
+  - Introduction: index.md
+
+plugins:
+  - techdocs-core

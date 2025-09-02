@@ -1,0 +1,21 @@
+syntax = "proto3";
+package qa.loadtesting.alilo.backend.v1;
+
+option go_package = "github.com/aliexpressru/alilo-backend/pkg/pb/qa/loadtesting/alilo/backend/v1";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+import "qa/loadtesting/alilo/backend/v1/models.proto";
+
+message ParseCUrlRequest {
+  string curl = 1;
+}
+
+message ParseCUrlResponse {
+  bool status = 1;
+  string message = 2;
+  string json = 3;
+}

@@ -1,0 +1,25 @@
+version: v1
+
+plugins:
+  - name: go
+    out: pkg/pb
+    opt: paths=source_relative
+  - name: go-grpc
+    out: pkg/pb
+    opt:
+      - paths=source_relative
+      - require_unimplemented_servers=false
+  - name: grpc-gateway
+    out: pkg/pb
+    opt:
+      - paths=source_relative
+      - generate_unbound_methods=true
+  - name: openapiv2
+    out: api/
+    strategy: all
+    opt:
+      - logtostderr=true
+      - allow_merge=true
+      - merge_file_name=api
+      - disable_default_errors=true
+      - json_names_for_fields=false

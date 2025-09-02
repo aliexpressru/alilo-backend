@@ -1,0 +1,124 @@
+syntax = "proto3";
+package qa.loadtesting.alilo.backend.v1;
+
+option go_package = "github.com/aliexpressru/alilo-backend/pkg/pb/qa/loadtesting/alilo/backend/v1";
+
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+import "qa/loadtesting/alilo/backend/v1/models.proto";
+import "qa/loadtesting/alilo/backend/v1/script_messages.proto";
+
+
+// hint: checkout protobuf style guide https://developers.google.com/protocol-buffers/docs/style
+service ScriptService {
+
+  // GetAllScripts - Retrieve all scripts in scenario regardless of their types
+  rpc GetAllScripts(.qa.loadtesting.alilo.backend.v1.GetAllScriptsRequest) returns (.qa.loadtesting.alilo.backend.v1.GetAllScriptsResponse) {
+    option (google.api.http) = {
+      post: "/v1/scripts"
+      body: "*"
+    };
+  }
+
+  // GetScript - Retrieve script by ID
+  rpc GetScript(.qa.loadtesting.alilo.backend.v1.GetScriptRequest) returns (.qa.loadtesting.alilo.backend.v1.GetScriptResponse) {
+    option (google.api.http) = {
+      post: "/v1/script"
+      body: "*"
+    };
+  }
+
+  // CreateScript - Create script
+  rpc CreateScript(.qa.loadtesting.alilo.backend.v1.CreateScriptRequest) returns (.qa.loadtesting.alilo.backend.v1.CreateScriptResponse) {
+    option (google.api.http) = {
+      post: "/v1/script/create"
+      body: "*"
+    };
+  }
+
+  // UpdateScript - Update script
+  rpc UpdateScript(.qa.loadtesting.alilo.backend.v1.UpdateScriptRequest) returns (.qa.loadtesting.alilo.backend.v1.UpdateScriptResponse) {
+    option (google.api.http) = {
+      post: "/v1/script/update"
+      body: "*"
+    };
+  }
+
+  // DeleteScript - Delete script
+  rpc DeleteScript(.qa.loadtesting.alilo.backend.v1.DeleteScriptRequest) returns (.qa.loadtesting.alilo.backend.v1.DeleteScriptResponse) {
+    option (google.api.http) = {
+      post: "/v1/script/delete"
+      body: "*"
+    };
+  }
+
+  // MoveScript - Move script to another scenario
+  rpc MoveScript(.qa.loadtesting.alilo.backend.v1.MoveScriptRequest) returns (.qa.loadtesting.alilo.backend.v1.MoveScriptResponse) {
+    option (google.api.http) = {
+      post: "/v1/script/move"
+      body: "*"
+    };
+  }
+
+  // CopyScript - Copy script
+  // Input: existing script ID
+  rpc CopyScript(.qa.loadtesting.alilo.backend.v1.CopyScriptRequest) returns (.qa.loadtesting.alilo.backend.v1.CopyScriptResponse) {
+    option (google.api.http) = {
+      post: "/v1/script/copy"
+      body: "*"
+    };
+  }
+
+  // GetSimpleScript - Retrieve simple script by ID
+  rpc GetSimpleScript(.qa.loadtesting.alilo.backend.v1.GetSimpleScriptRequest) returns (.qa.loadtesting.alilo.backend.v1.GetSimpleScriptResponse) {
+    option (google.api.http) = {
+      post: "/v1/simple-script"
+      body: "*"
+    };
+  }
+
+  // CreateSimpleScript - Create simple script
+  rpc CreateSimpleScript(.qa.loadtesting.alilo.backend.v1.CreateSimpleScriptRequest) returns (.qa.loadtesting.alilo.backend.v1.CreateSimpleScriptResponse) {
+    option (google.api.http) = {
+      post: "/v1/simple-script/create"
+      body: "*"
+    };
+  }
+
+  // UpdateSimpleScript - Update simple script
+  rpc UpdateSimpleScript(.qa.loadtesting.alilo.backend.v1.UpdateSimpleScriptRequest) returns (.qa.loadtesting.alilo.backend.v1.UpdateSimpleScriptResponse) {
+    option (google.api.http) = {
+      post: "/v1/simple-script/update"
+      body: "*"
+    };
+  }
+
+  // DeleteSimpleScript - Delete simple script
+  rpc DeleteSimpleScript(.qa.loadtesting.alilo.backend.v1.DeleteSimpleScriptRequest) returns (.qa.loadtesting.alilo.backend.v1.DeleteSimpleScriptResponse) {
+    option (google.api.http) = {
+      post: "/v1/simple-script/delete"
+      body: "*"
+    };
+  }
+
+  // MoveSimpleScript - Move simple script to another scenario
+  rpc MoveSimpleScript(.qa.loadtesting.alilo.backend.v1.MoveSimpleScriptRequest) returns (.qa.loadtesting.alilo.backend.v1.MoveSimpleScriptResponse) {
+    option (google.api.http) = {
+      post: "/v1/simple-script/move"
+      body: "*"
+    };
+  }
+
+  // CopySimpleScript - Copy simple script
+  // Input: existing script ID
+  rpc CopySimpleScript(.qa.loadtesting.alilo.backend.v1.CopySimpleScriptRequest) returns (.qa.loadtesting.alilo.backend.v1.CopySimpleScriptResponse) {
+    option (google.api.http) = {
+      post: "/v1/simple-script/copy"
+      body: "*"
+    };
+  }
+}

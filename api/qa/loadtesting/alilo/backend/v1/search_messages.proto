@@ -1,0 +1,62 @@
+syntax = "proto3";
+package qa.loadtesting.alilo.backend.v1;
+
+option go_package = "github.com/aliexpressru/alilo-backend/pkg/pb/qa/loadtesting/alilo/backend/v1";
+
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+import "qa/loadtesting/alilo/backend/v1/models.proto";
+
+
+message SearchRequest {
+  string search_query = 1;
+  optional bool not_like = 2;
+  oneof id {
+    int32 project_id = 3;
+    int32 scenario_id = 4;
+  }
+  oneof with {
+    bool start_with = 5;
+    bool end_with = 6;
+  }
+}
+
+message SearchResponse {
+  bool status = 1;
+  repeated .qa.loadtesting.alilo.backend.v1.Script scripts = 2;
+  repeated .qa.loadtesting.alilo.backend.v1.SimpleScript simple_scripts = 4;
+  repeated .qa.loadtesting.alilo.backend.v1.Project projects = 5;
+  repeated .qa.loadtesting.alilo.backend.v1.Scenario scenarios = 6;
+  string message = 3;
+}
+
+message PageNumRequest {
+  TypesEntry type_entry = 1;
+  int32 id = 2;
+  int32 limit = 3;
+
+  enum TypesEntry {
+    TYPES_ENTRY_UNSPECIFIED = 0;
+    TYPES_ENTRY_PROJECTS = 1;
+    TYPES_ENTRY_SCENARIOS = 2;
+  }
+}
+
+message PageNumResponse {
+  int32 page_num = 1;
+
+  bool status = 2;
+  string message = 3;
+}
+
+
+
+
+//  optional int32 limit = 3;
+//  optional int32 page_number = 4;
+
+//  optional int64 total_pages = 4;

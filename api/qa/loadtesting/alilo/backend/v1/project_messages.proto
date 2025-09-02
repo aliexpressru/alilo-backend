@@ -1,0 +1,62 @@
+syntax = "proto3";
+package qa.loadtesting.alilo.backend.v1;
+
+option go_package = "github.com/aliexpressru/alilo-backend/pkg/pb/qa/loadtesting/alilo/backend/v1";
+
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+import "qa/loadtesting/alilo/backend/v1/models.proto";
+
+message GetAllProjectsRequest {
+  optional int32 limit = 3;
+  optional int32 page_number = 4;
+}
+
+message GetAllProjectsResponse {
+  bool status = 1;
+  repeated .qa.loadtesting.alilo.backend.v1.Project projects = 2;
+  string message = 3;
+  optional int64 total_pages = 4;
+}
+
+message GetProjectRequest {
+  int32 id = 1;
+}
+
+message GetProjectResponse {
+  bool status = 1;
+  .qa.loadtesting.alilo.backend.v1.Project project = 2;
+  string message = 3;
+}
+
+message CreateProjectRequest {
+  .qa.loadtesting.alilo.backend.v1.Project project = 1;
+}
+
+message CreateProjectResponse {
+  bool status = 1;
+  int32 id = 2;
+  string message = 3;
+}
+
+message UpdateProjectRequest {
+  .qa.loadtesting.alilo.backend.v1.Project project = 2;
+}
+
+message UpdateProjectResponse {
+  bool status = 1;
+  string message = 2;
+}
+
+message DeleteProjectRequest {
+  int32 id = 1;
+}
+
+message DeleteProjectResponse {
+  bool status = 1;
+  string message = 2;
+}

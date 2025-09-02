@@ -1,0 +1,41 @@
+syntax = "proto3";
+package qa.loadtesting.alilo.backend.v1;
+
+option go_package = "github.com/aliexpressru/alilo-backend/pkg/pb/qa/loadtesting/alilo/backend/v1";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+import "qa/loadtesting/alilo/backend/v1/models.proto";
+import "qa/loadtesting/alilo/backend/v1/s3_messages.proto";
+
+
+// hint: checkout protobuf style guide https://developers.google.com/protocol-buffers/docs/style
+service S3 {
+  // GetBucketList - Get all buckets as list
+  rpc GetBucketList(.qa.loadtesting.alilo.backend.v1.GetBucketListRequest) returns (.qa.loadtesting.alilo.backend.v1.GetBucketListResponse) {
+    option (google.api.http) = {
+      post: "/v1/s3/getBucketList"
+      body: "*"
+    };
+  }
+
+  // UploadFile - Upload file
+  rpc UploadFile(.qa.loadtesting.alilo.backend.v1.UploadFileRequest) returns (.qa.loadtesting.alilo.backend.v1.UploadFileResponse) {
+    option (google.api.http) = {
+      post: "/v1/s3/uploadFile"
+      body: "*"
+    };
+  }
+
+  // DeleteFile - Delete file from bucket
+  rpc DeleteFile(.qa.loadtesting.alilo.backend.v1.DeleteFileRequest) returns (.qa.loadtesting.alilo.backend.v1.DeleteFileResponse) {
+    option (google.api.http) = {
+      post: "/v1/s3/deleteBucketFile"
+      body: "*"
+    };
+  }
+}
+
