@@ -2,7 +2,12 @@
 FROM golang:1.23-alpine AS builder
 
 # Install required packages
-RUN apk add --no-cache git make protobuf ca-certificates
+RUN apk add --no-cache --virtual .build-deps \
+    git \
+    make \
+    protobuf \
+    ca-certificates \
+    && rm -rf /var/cache/apk/*
 
 WORKDIR /app
 
@@ -10,17 +15,22 @@ WORKDIR /app
 COPY . .
 
 # Install dependencies and build
-RUN make install-tools
-RUN make generate
-RUN go mod vendor
-RUN go mod tidy
-RUN make build
+RUN make install-tools && \
+    make generate && \
+    go mod vendor && \
+    go mod tidy && \
+    make build && \
+    apk del .build-deps
 
-# Final stage
+# Final stage - minimal runtime image
 FROM alpine:latest
 
-# Install ca-certificates
-RUN apk --no-cache add ca-certificates
+# Install only essential runtime dependencies and clean cache
+RUN apk add --no-cache --virtual .runtime-deps \
+    ca-certificates \
+    wget \
+    && rm -rf /var/cache/apk/* \
+    && apk del .runtime-deps
 
 # Create non-root user
 RUN addgroup -g 1001 -S appgroup && \
@@ -32,14 +42,15 @@ WORKDIR /app
 COPY --from=builder /app/bin/alilo-backend .
 COPY --from=builder /app/templateSimpleScript .
 
-# Change ownership
-RUN chown -R appuser:appgroup /app
+# Set proper permissions
+RUN chown appuser:appgroup /app/alilo-backend && \
+    chmod +x /app/alilo-backend
 
 # Switch to non-root user
 USER appuser
 
-# Expose port
+# Expose ports
 EXPOSE 8080 8084 3000
 
-# Run the application
-CMD ["./alilo-backend"]
+# Entrypoint
+ENTRYPOINT ["./alilo-backend"]
