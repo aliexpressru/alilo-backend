@@ -1,0 +1,126 @@
+services:
+  # add after postgress_db call goose migrations with examples
+  postgres_db:
+    image: postgres:latest
+    container_name: postgres_db
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mysecretpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - alilo-network
+
+  goose:
+    build:
+      context: ./db/migrations
+    container_name: goose
+    depends_on:
+      - postgres_db
+    environment:
+      DBHOST: postgres_db
+      DBUSER: postgres
+      DBPASSWORD: mysecretpassword
+      DBNAME: postgres
+      DBSSL: disable
+    restart: on-failure
+    networks:
+      - alilo-network
+
+  minio:
+    container_name: minio
+    image: quay.io/minio/minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin # Change in production!
+      MINIO_ROOT_PASSWORD: minioadmin # Change in production!
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000" # S3 API port
+      - "9001:9001" # Web console port
+    restart: unless-stopped
+    networks:
+      - alilo-network
+
+  init-minio:
+    container_name: init-minio
+    image: quay.io/minio/mc:RELEASE.2025-03-12T17-29-24Z
+    depends_on:
+      - minio
+    restart: on-failure
+    entrypoint: >
+      /bin/sh -c "
+      sleep 5;
+      /usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin;
+      /usr/bin/mc mb myminio/test-data/test;
+      /usr/bin/mc mb anonymous get myminio/test-data;
+      /usr/bin/mc anonymous set public myminio/test-data;
+      exit 0;
+      "
+    networks:
+      - alilo-network
+
+  agent:
+    image: ghcr.io/aliexpressru/alilo-agent/alilo-agent:main
+    # image: agent-local:latest
+    container_name: agent
+    environment:
+      - AGENT_HOST=agent1
+    ports:
+      - "8282:8282" # GRPC
+      - "8888:8888" # HTTP
+    networks:
+      - alilo-network
+
+  backend:
+    container_name: backend
+    image: ghcr.io/aliexpressru/alilo-backend:main
+    # image: backend-local:latest    
+    restart: always
+    volumes:
+      - ./.env:/app/.env
+      - ./bin:/bin
+    ports:
+      - "3000:3000"
+      - "8084:8084" # HTTP
+      - "9090:9090" # gRPC
+    depends_on:
+      - postgres_db
+      - minio
+    networks:
+      - alilo-network
+
+  frontend:
+    image: ghcr.io/aliexpressru/alilo-frontend:main
+    # image: frontend-local:latest
+    # platform: linux/amd64
+    restart: on-failure
+    container_name: frontend
+    ports:
+      - "8080:8080"
+      - "80:80"
+      - "84:84"
+    depends_on:
+      - backend
+    networks:
+      - alilo-network
+
+volumes:
+  migrations:
+  postgres_data:
+    driver: local
+  minio_data:
+    driver: local
+
+networks:
+  alilo-network:
+    driver: bridge

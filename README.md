@@ -25,6 +25,12 @@ git clone https://github.com/aliexpressru/alilo-agent.git
 docker compose up -d
 ```
 
+**Access the following services:**
+
+- **Frontend**: http://localhost
+- **Backend Swagger**: http://localhost:8084/swagger#/
+- **MinIO UI**: http://localhost:9001/login (credentials: minioadmin/minioadmin)
+- **Agent API**: http://localhost:8888/api/ (see full [endpoint list](https://github.com/aliexpressru/alilo-agent?tab=readme-ov-file#agent-endpoints))
 
 ### Core Domain Models:
 
