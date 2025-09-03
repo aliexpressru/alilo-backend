@@ -30,6 +30,7 @@ WORKDIR /app
 
 # Copy binary from builder stage
 COPY --from=builder /app/bin/alilo-backend .
+COPY --from=builder /app/templateSimpleScript .
 
 # Change ownership
 RUN chown -R appuser:appgroup /app
