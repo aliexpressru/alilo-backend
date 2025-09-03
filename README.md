@@ -21,7 +21,7 @@ The Alilo Backend is the core service that powers the load-testing platform. It 
 To demonstrate the functionality, clone the repository and launch all containers.
 
 ```console
-git clone https://github.com/aliexpressru/alilo-agent.git
+git clone https://github.com/aliexpressru/alilo-backend.git
 docker compose up -d
 ```
 
