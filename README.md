@@ -134,6 +134,8 @@ services:
   postgres_db:
     image: postgres:latest
     container_name: postgres_db
+    security_opt: 
+      - no-new-privileges:true
     restart: always
     environment:
       - POSTGRES_USER=postgres
@@ -153,6 +155,8 @@ services:
   minio:
     container_name: minio
     image: quay.io/minio/minio
+    security_opt: 
+      - no-new-privileges:true
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: minioadmin
@@ -169,6 +173,8 @@ services:
   init-minio:
     container_name: init-minio
     image: quay.io/minio/mc:RELEASE.2025-03-12T17-29-24Z
+    security_opt: 
+      - no-new-privileges:true
     depends_on:
       - minio
     restart: on-failure
