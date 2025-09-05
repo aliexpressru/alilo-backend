@@ -28,7 +28,6 @@ FROM alpine:latest
 # Install only essential runtime dependencies and clean cache
 RUN apk add --no-cache --virtual .runtime-deps \
     ca-certificates \
-    wget \
     && rm -rf /var/cache/apk/* \
     && apk del .runtime-deps
 
