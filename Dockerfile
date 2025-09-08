@@ -51,4 +51,5 @@ USER appuser
 # Expose ports
 EXPOSE 8080 8084 3000
 
+# Run the application
 CMD ["./alilo-backend"]
