@@ -51,5 +51,4 @@ USER appuser
 # Expose ports
 EXPOSE 8080 8084 3000
 
-# Entrypoint
-ENTRYPOINT ["./alilo-backend"]
+CMD ["./alilo-backend"]
